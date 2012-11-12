@@ -9,3 +9,11 @@ during their work.
 Written (to start) to use Flask and Mongo.  It will provide a RESTful API to handle
 the actions involved with handling tracking and rewarding players.
 
+##Setup
+
+(TODO: expand this)
+Use virtualenv (it is such a good thing to do)
+```
+mkvirtualenv onpeak-rpg
+pip install -r requirements.txt
+```
