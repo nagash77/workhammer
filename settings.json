@@ -1,5 +1,6 @@
 {
   "debug": true,
+  "secret_key": "onpeakrpggamebitches",
   "mongo": {
     "host": "localhost",
     "port": 27017
