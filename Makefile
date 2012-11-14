@@ -28,4 +28,4 @@ lint:
 test: lint unittest
 
 serve:
-	python -m rpg
+	python serve.py

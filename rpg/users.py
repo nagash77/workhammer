@@ -4,7 +4,8 @@ from rpg.database import User, errors
 import httplib
 
 
-@app.route('/register', methods=['POST'])
+@app.endpoint('/register', methods=['POST'])
+#@app.route('/register', methods=['POST'])
 def register():
     ''' register -> POST /register
         POST: username=[string]&password=[string]
