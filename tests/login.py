@@ -1,11 +1,27 @@
 from base import TestBase
 from unittest import skip
+import json
+import httplib
 
 
 class LoginTest(TestBase):
     ''' LoginTest
     Test suite to test the login functionality.
     '''
+    user = {
+        "username": "testuser",
+        "password": "testting password"
+    }
+
+    def register(self, user=None):
+        ''' LoginTest::register
+        Helper method, performs the basics of registering a user, takes a
+        dictionary of the credentials to use, if not provided, the class
+        default credentials are used.
+        '''
+        user = user if user else self.user
+        response = self.app.post('/register', data=user)
+        return response.data, response
 
     def test_good_login(self):
         ''' LoginTest::test_good_login
@@ -34,4 +50,5 @@ class LoginTest(TestBase):
         Registers a new user, should go through the full process to create the
         user and then make sure the user has logged in.
         '''
-        self.assertTrue(True)
+        user_id, response = self.register()
+        self.assertHasStatus(response, httplib.CREATED)

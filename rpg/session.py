@@ -1,25 +1,26 @@
 from flask.sessions import SessionInterface, SessionMixin
-from settings import settings
+import settings
+from database import Sessions
 
-SESSION_KEY = settings.get('session_key', 'session_key')
+SESSION_KEY = settings.SECRET_KEY
 
 
 class Session(dict, SessionMixin):
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
         self["permissions"] = []
-        #self.update(settings.get('session_defaults', {}))
+        self.update(settings.DEFAULT_SESSION)
 
     pass
 
 
-class Sessions(SessionInterface):
-    ''' Sessions
+class SessionHandler(SessionInterface):
+    ''' SessionHandler
     class implementing the SessionInterface for Flask to store the sessions in
     the database, this could always use plenty of work.
     '''
-    def __init__(self, db):
-        self.db = db
+    def __init__(self):
+        pass
 
     def open_session(self, app, request):
         ''' Sessions::open_session
@@ -29,7 +30,8 @@ class Sessions(SessionInterface):
         '''
         if SESSION_KEY not in request.cookies:
             return Session()
-        session = self.db.Session.get(request.cookies[SESSION_KEY])
+        session_id = request.cookies[SESSION_KEY]
+        session = Sessions.get(session_id)
         return session if session else Session()
 
     def save_session(self, app, session, response):
@@ -38,5 +40,5 @@ class Sessions(SessionInterface):
         session packet or not (if the is an id in the packet), if it is new,
         the id will be stored as a cookie for future lookup
         '''
-        id = self.db.Session.save(session)
+        id = Sessions.save(session)
         response.set_cookie(SESSION_KEY, value=id)
