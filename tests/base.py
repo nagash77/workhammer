@@ -32,6 +32,7 @@ class TestBase(unittest.TestCase):
         application and sets the application testing flag
         '''
         rpg.app.config['TESTING'] = True
+        rpg.app.debug = False
         self.app = rpg.app.test_client()
         response = self.app.get('/', content_type="application/json")
         self.endpoints = json.loads(response.data)
