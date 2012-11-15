@@ -26,3 +26,22 @@ class MissingInfoError(DatabaseError):
     information.
     '''
     pass
+
+
+class NoEntryError(DatabaseError):
+    ''' NoEntryError
+    Raised when an object is requested from the database does not find a
+    document, this may get removed and replaced with returning None, need to
+    decide.
+    '''
+    pass
+
+
+class NonMongoDocumentError(DatabaseError):
+    ''' NonMongoDocumentError
+    Raised when an update operation is going to be performed with a document
+    that lacks an index, meaning the document is not originally from the
+    mongo backend (has either been modified to remove the index or is brand
+    new).
+    '''
+    pass
