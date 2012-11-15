@@ -17,6 +17,7 @@ VENV=$(shell if $VIRTUAL_ENV > /dev/null ; \
 init:
 	${VENV} rpg
 	pip install -r requirements.txt
+	cp rpg/settings.py_template rpg/settings.py
 
 unittest:
 	nosetests --with-color ./tests/*.py
