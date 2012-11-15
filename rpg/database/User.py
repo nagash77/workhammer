@@ -5,8 +5,6 @@ from rpg.database import errors
 from rpg import roles
 database = rpg.database.collection("users")
 
-default_role = roles.PLAYER
-
 
 def __private_user(packet):
     ''' __private_user
@@ -30,7 +28,7 @@ def __public_user(packet):
     }
 
 
-def create(info, role=[default_role]):
+def create(info, role=[]):
     ''' User.create
     Tries to create an entry in the users table with the provided credentials,
     returns the user ID.
