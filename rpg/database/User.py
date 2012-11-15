@@ -5,6 +5,12 @@ from rpg.database import errors
 from rpg import roles
 database = rpg.database.collection("users")
 
+roles_lookup = dict(
+        map(lambda r: (getattr(roles, r), r),
+            filter(lambda d: not d.startswith('__'), dir(roles))
+        )
+    )
+
 
 def __private_user(packet):
     ''' __private_user
@@ -14,7 +20,7 @@ def __private_user(packet):
     return {
         "username": packet["username"],
         "id": str(packet["_id"]),
-        "role": packet["role"]
+        "role": map(lambda k: roles_lookup.get(k), packet["role"])
     }
 
 
@@ -74,7 +80,8 @@ def login(username, pwhash):
     session).  If it fails, the ID will be None.
     '''
     user = database.find_one({"username": username, "password": pwhash})
-    return (__private_user(user), user['_id']) if user else (None, None)
+    return (__private_user(user), user['_id'], user['role']) if user \
+            else (None, None, None)
 
 
 def lookup(username=None, id=None):

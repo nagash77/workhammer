@@ -39,10 +39,10 @@ def register():
 def login():
     username = request.form['username']
     password = request.form['password']
-    user, id = User.login(username, password_hash(password))
+    user, id, roles = User.login(username, password_hash(password))
     if id:
         session['id'] = str(id)
-        session['role'] = user['role']
+        session['role'] = roles
         return redirect(url_for('index')) if request.is_html else \
                 (user, httplib.OK)
     else:
