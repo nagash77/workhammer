@@ -44,29 +44,33 @@ def datatype(template=None):
     def decorator(func):
         @wraps(func)
         def decorated_function(*args, **kwargs):
+            request.is_html = request.accept_mimetypes.accept_html
             data = func(*args, **kwargs)
-            if type(data) is tuple:  # if multiple, treat normally
-                response = make_response(*data)
-            elif type(data) is int:  # if int, treat it like a status code
+            status_code = httplib.OK
+            if type(data) is tuple:  # if multiple, break apart
+                status_code = data[1]
+                data = data[0]
+
+            if type(data) is int:  # if int, treat it like a status code
                 response = make_response("", data)
             elif type(data) is dict:  # if it is a dict, treat like data packet
                 callback = request.args.get('callback', False)
                 if callback:  # if has a callback parameter, treat like JSONP
                     data = str(callback) + "(" + \
                             mimetypes['application/json'](data) + ");"
-                    response = make_response(data)
+                    response = make_response(data, status_code)
                     response.mimetype = 'application/javascript'
                 else:  # Non-JSONP treatment
                     best = request.accept_mimetypes. \
                             best_match(mimetypes.keys())
                     data = mimetypes[best](data) if best \
                             else mimetypes[default](data)
-                    response = make_response(data)
+                    response = make_response(data, status_code)
                     response.mimetype = best if best else default
             elif type(data) is Response:  # if it is a Response, already done
                 response = data
             else:  # otherwise, treat it like raw data
-                response = make_response(data)
+                response = make_response(data, status_code)
 
             return response
         return decorated_function
@@ -77,21 +81,27 @@ def datatype(template=None):
         return decorator
 
 
-def require_credentials(func):
-    ''' require_credentials decorator:
+def require_permissions(*roles):
+    ''' require_permissions decorator:
     This decorator function is used to flag routes as endpoints that require
     the user to be logged in.  This is to easily take care of handling all of
     the checks on handlers that expect credentials to be in the session for
     the actions to be taken care of.
 
     ex:
-        @require_credentials
+        @require_permissions(roles.ADMIN)
         @app.route('/some/path')
-        def some_function():  # this will only be run if the user is logged in
+        def some_function():  # Won't run if user is not an admin
             return { "foo": "bar" }
     '''
-    @wraps(func)
-    def decorated_function(*args, **kwargs):
-        if 'id' not in session:  # is this correct?
-            abort(httplib.UNAUTHORIZED)
-        return func(*args, **kwargs)
+    def decorator(func):
+        @wraps(func)
+        def decorated_function(*args, **kwargs):
+            if 'id' not in session:
+                abort(httplib.UNAUTHORIZED)
+            elif 'role' not in session and session['role'] not in roles:
+                abort(httplib.UNAUTHORIZED)
+            return func(*args, **kwargs)
+        return decorated_function
+
+    return decorator

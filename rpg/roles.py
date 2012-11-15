@@ -1,0 +1,3 @@
+ROOT = 0
+ADMIN = 1
+PLAYER = 2

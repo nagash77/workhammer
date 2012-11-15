@@ -1,13 +1,22 @@
-import rpg.database as database
-#from rpg.database import errors
+import rpg.database
+from rpg.database import errors
+database = rpg.database.collection("players")
+
+player_keys = ["name"]
 
 
-class Player:
-    ''' Player:
+def has_keys(src, keys):
+    ''' has_keys
+    Checks that the <dict> src has all of the keys in keys
     '''
-    players = database.collection("players")
+    return reduce(lambda a, b: a and b, map(lambda k: k in src, keys))
 
-    def __init__(self, id=None):
-        ''' Player::__init__
-        '''
-        return
+
+def create(info):
+    ''' Player.create
+    '''
+    if not has_keys(info, player_keys):
+        raise errors.MissingInfoError("Missing properties when creating a " + \
+                "player.")
+
+    return info

@@ -1,3 +1,8 @@
+''' api.py
+This is a collection of generic API functions, this mostly provides simple
+things that don't really fall under other categories.  Helps flush out how the
+API works and adds nice functionality and features to it.
+'''
 from rpg import app
 from decorators import datatype
 
@@ -14,7 +19,6 @@ def index():
 
 
 @app.endpoint('/version')
-#@app.route('/version')
 @datatype
 def version():
     ''' version -> * /version

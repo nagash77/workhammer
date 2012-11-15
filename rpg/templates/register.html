@@ -1,0 +1,8 @@
+% extends "base.html"
+% block body
+   <form name="register" action="{{ url_for('register') }}" method="POST">
+      <input name="username" type="text">
+      <input name="password" type="password">
+      <input type="submit" value="Register">
+   </form>
+% endblock
