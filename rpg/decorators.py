@@ -1,8 +1,36 @@
+''' decorators.py
+This file defines the helper decorator functions, these are some application
+wide decorators for routes to help with common tasks and scenarios for dealing
+with the web requests.
+'''
 import json
 from functools import wraps
 from flask import request, make_response, Response, session, abort, \
-        render_template
+        render_template, Flask
 import httplib
+
+
+class RPGFlask(Flask):
+    ''' RPGFlask:
+    This is just an expansion on the Flask app class to add fancier decorators
+    to the app
+    '''
+    def __init__(self, *args, **kwargs):
+        self.endpoints = {}  # This is the storage property for the endpoints
+        return Flask.__init__(self, *args, **kwargs)
+
+    def endpoint(self, *args, **kwargs):
+        ''' endpoing decorator:
+        Like the route decorator, does the same thing except labels the route
+        as an endpoint, meaning the route is a specific entry point into the
+        application, other routes are given dynamically.
+        '''
+        def decorator(f):
+            self.endpoints[f.__name__] = {
+                'url': args[0]
+            }
+            return self.route(*args, **kwargs)(f)
+        return decorator
 
 
 class JSONEncoder(json.JSONEncoder):
