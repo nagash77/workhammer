@@ -4,7 +4,7 @@ users.  Mainly handling registering, logging in/out, account changes, etc.
 '''
 from flask import request, redirect, url_for, session
 from rpg import app, password_hash, logger
-from rpg.database import User, errors
+from rpg.database import User, errors, Sessions
 from rpg.decorators import datatype
 import httplib
 
@@ -42,6 +42,7 @@ def login():
     user, id = User.login(username, password_hash(password))
     if id:
         session['id'] = str(id)
+        session['role'] = user['role']
         return redirect(url_for('index')) if request.is_html else \
                 (user, httplib.OK)
     else:
@@ -51,4 +52,6 @@ def login():
 @app.endpoint('/logout', methods=['GET'])
 @datatype
 def logout():
+    Sessions.remove(session['_id'])
+    session.clear()
     return redirect(url_for('index')) if request.is_html else httplib.ACCEPTED

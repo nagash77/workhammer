@@ -15,7 +15,8 @@ def __private_user(packet):
     '''
     return {
         "username": packet["username"],
-        "id": str(packet["_id"])
+        "id": str(packet["_id"]),
+        "role": packet["role"]
     }
 
 
@@ -29,7 +30,7 @@ def __public_user(packet):
     }
 
 
-def create(info, role=default_role):
+def create(info, role=[default_role]):
     ''' User.create
     Tries to create an entry in the users table with the provided credentials,
     returns the user ID.
@@ -38,8 +39,11 @@ def create(info, role=default_role):
         raise errors.ExistingUsernameError('Username: %s already exists',
                 info["username"])
 
+    if type(role) is not list:
+        role = [role]
+
     if database.count() == 0:
-        role = roles.ROOT
+        role.append(roles.ROOT)
 
     info.update({
         'role': role,

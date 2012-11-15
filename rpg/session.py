@@ -1,6 +1,6 @@
 from flask.sessions import SessionInterface, SessionMixin
-import settings
-from database import Sessions
+from rpg import settings
+from rpg.database import Sessions
 
 SESSION_KEY = settings.SECRET_KEY
 
@@ -10,7 +10,6 @@ class Session(dict, SessionMixin):
         dict.__init__(self, *args, **kwargs)
         self["permissions"] = []
         self.update(settings.DEFAULT_SESSION)
-
     pass
 
 
