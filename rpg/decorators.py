@@ -6,7 +6,7 @@ with the web requests.
 import json
 from functools import wraps
 from flask import request, make_response, Response, session, abort, \
-        render_template, Flask
+    render_template, Flask
 import httplib
 
 
@@ -66,7 +66,7 @@ def datatype(template=None):
     }
     if type(template) is str:
         mimetypes["application/html"] = lambda d: \
-                render_template(template, **d)
+            render_template(template, **d)
     default = 'application/json'
 
     def decorator(func):
@@ -85,14 +85,14 @@ def datatype(template=None):
                 callback = request.args.get('callback', False)
                 if callback:  # if has a callback parameter, treat like JSONP
                     data = str(callback) + "(" + \
-                            mimetypes['application/json'](data) + ");"
+                        mimetypes['application/json'](data) + ");"
                     response = make_response(data, status_code)
                     response.mimetype = 'application/javascript'
                 else:  # Non-JSONP treatment
                     best = request.accept_mimetypes. \
-                            best_match(mimetypes.keys())
+                        best_match(mimetypes.keys())
                     data = mimetypes[best](data) if best \
-                            else mimetypes[default](data)
+                        else mimetypes[default](data)
                     response = make_response(data, status_code)
                     response.mimetype = best if best else default
             elif type(data) is Response:  # if it is a Response, already done

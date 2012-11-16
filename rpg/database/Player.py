@@ -21,8 +21,8 @@ def create(info):
     the player info and the id of the entry (or None if it failed)
     '''
     if not has_keys(info, player_keys):
-        raise errors.MissingInfoError("Missing properties when creating a " + \
-                "player.")
+        raise errors.MissingInfoError(
+            "Missing properties when creating a player.")
 
     return info, database.insert(info)
 
@@ -38,8 +38,9 @@ def get(info):
 
     player = database.find_one(info)
     if not player:
-        raise errors.NoEntryError("Information provided to find a Player " + \
-                "document did not find anything.")
+        raise errors.NoEntryError(
+            "Information provided to find a Player document did not find " +
+            "anything.")
     return player
 
 
@@ -50,6 +51,7 @@ def modify(info):
     class, etc.
     '''
     if '_id' not in info:
-        raise errors.NonMongoDocumentError("Trying to modify a Player that" + \
-                " is not in the database, use Player::create instead.")
+        raise errors.NonMongoDocumentError(
+            "Trying to modify a Player that is not in the database, use " +
+            "Player::create instead.")
     return database.save(info)

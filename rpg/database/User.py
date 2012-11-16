@@ -6,10 +6,9 @@ from rpg import roles
 database = rpg.database.collection("users")
 
 roles_lookup = dict(
-        map(lambda r: (getattr(roles, r), r),
-            filter(lambda d: not d.startswith('__'), dir(roles))
-        )
-    )
+    map(lambda r: (getattr(roles, r), r),
+        filter(lambda d: not d.startswith('__'), dir(roles)))
+)
 
 
 def __private_user(packet):
@@ -40,8 +39,8 @@ def create(info, role=[]):
     returns the user ID.
     '''
     if database.find_one({"username": info["username"]}):
-        raise errors.ExistingUsernameError('Username: %s already exists',
-                info["username"])
+        raise errors.ExistingUsernameError(
+            "Username: %s already exists", info["username"])
 
     if type(role) is not list:
         role = [role]
@@ -81,7 +80,7 @@ def login(username, pwhash):
     '''
     user = database.find_one({"username": username, "password": pwhash})
     return (__private_user(user), user['_id'], user['role']) if user \
-            else (None, None, None)
+        else (None, None, None)
 
 
 def lookup(username=None, id=None):
