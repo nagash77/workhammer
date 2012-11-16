@@ -1,4 +1,5 @@
 from bson.objectid import ObjectId
+from flask import url_for
 from datetime import datetime
 import rpg.database
 from rpg.database import errors
@@ -12,6 +13,17 @@ def has_keys(src, keys):
     Checks that the <dict> src has all of the keys in keys
     '''
     return reduce(lambda a, b: a and b, map(lambda k: k in src, keys))
+
+
+def __simple(packet):
+    ''' __simple
+    Returns the simple version of the Player document
+    '''
+    return {
+        "name": packet["name"],
+        "id": str(packet["_id"]),
+        "url": url_for('get_player', player_id=str(packet["_id"]))
+    }
 
 
 def create(info, user_id):
@@ -50,6 +62,14 @@ def get(info):
             "Information provided to find a Player document did not find " +
             "anything.")
     return player
+
+
+def all():
+    ''' Player::all
+    Retrieves *all* of the player documents from the database and returns a
+    <list> of them.
+    '''
+    return [__simple(player) for player in database.find()]
 
 
 def modify(info, user_id):
