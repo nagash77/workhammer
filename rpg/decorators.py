@@ -7,7 +7,6 @@ import json
 from functools import wraps
 from flask import request, make_response, Response, session, abort, \
     render_template, Flask
-from rpg import logger
 import httplib
 
 
@@ -130,6 +129,8 @@ def require_permissions(*roles):
         def some_function():  # Won't run if user is not an admin
             return { "foo": "bar" }
     '''
+    from rpg import logger
+
     def decorator(func):
         @wraps(func)
         def decorated_function(*args, **kwargs):

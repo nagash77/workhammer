@@ -54,7 +54,7 @@ def login():
         return redirect(url_for('index')) if request.is_html else \
             (user, httplib.OK)
     else:
-        logger.warn("Login for {} failed.", username)
+        logger.warning("Login for {} failed.", username)
         return "Invalid credentials", httplib.BAD_REQUEST
 
 
