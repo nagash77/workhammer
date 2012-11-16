@@ -24,11 +24,12 @@ def register():
             'password': password_hash(password)
         })
     except errors.ExistingUsernameError as err:
-        logger.debug(err)
+        logger.info(err)
         return httplib.CONFLICT
 
     session['id'] = str(id)
     session['role'] = role
+    logger.info("Username {} registered.".format(username))
 
     return redirect(url_for('index')) if request.is_html else \
         (str(id), httplib.CREATED)
@@ -49,6 +50,7 @@ def login():
     if id:
         session['id'] = str(id)
         session['role'] = roles
+        logger.info("User {} ({}) logged in.".format(username, id))
         return redirect(url_for('index')) if request.is_html else \
             (user, httplib.OK)
     else:
@@ -62,6 +64,7 @@ def logout():
     Removes the credentials from the session, effectively removing all session
     stored information.
     '''
+    logger.info("User ({}) logged out.".format(session['id']))
     Sessions.remove(session['_id'])
     session.clear()
     return redirect(url_for('index')) if request.is_html else httplib.ACCEPTED

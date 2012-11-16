@@ -7,6 +7,7 @@ import json
 from functools import wraps
 from flask import request, make_response, Response, session, abort, \
     render_template, Flask
+from rpg import logger
 import httplib
 
 
@@ -126,10 +127,20 @@ def require_permissions(*roles):
         @wraps(func)
         def decorated_function(*args, **kwargs):
             if 'id' not in session:
+                logger.warn("Attempting to access without being logged in.")
                 abort(httplib.UNAUTHORIZED)
-            elif 'role' not in session and session['role'] not in roles:
+            elif len(roles) and 'role' not in session \
+                    and session['role'] not in roles:
+                logger.warn("Attempting to access without sufficient " +
+                            "permissions.  Has: {} Needs: {}".format(
+                            session['role'], roles))
                 abort(httplib.UNAUTHORIZED)
             return func(*args, **kwargs)
         return decorated_function
 
-    return decorator
+    if hasattr(roles[0], '__call__'):  # if no roles were given
+        f = roles[0]
+        roles = []
+        return decorator(f)
+    else:
+        return decorator
