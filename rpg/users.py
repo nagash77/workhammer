@@ -29,7 +29,7 @@ def register():
 
     session['id'] = str(id)
     session['role'] = role
-    logger.info("Username {} registered.".format(username))
+    logger.info("Username {} registered.", username)
 
     return redirect(url_for('index')) if request.is_html else \
         (str(id), httplib.CREATED)
@@ -50,10 +50,11 @@ def login():
     if id:
         session['id'] = str(id)
         session['role'] = roles
-        logger.info("User {} ({}) logged in.".format(username, id))
+        logger.info("User {} ({}) logged in.", username, id)
         return redirect(url_for('index')) if request.is_html else \
             (user, httplib.OK)
     else:
+        logger.warn("Login for {} failed.", username)
         return "Invalid credentials", httplib.BAD_REQUEST
 
 
@@ -64,7 +65,7 @@ def logout():
     Removes the credentials from the session, effectively removing all session
     stored information.
     '''
-    logger.info("User ({}) logged out.".format(session['id']))
+    logger.info("User ({}) logged out.", session['id'])
     Sessions.remove(session['_id'])
     session.clear()
     return redirect(url_for('index')) if request.is_html else httplib.ACCEPTED

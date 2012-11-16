@@ -11,6 +11,13 @@ from rpg import logger
 import httplib
 
 
+def intersect(a, b):
+    ''' intersect
+    Returns a boolean if an item in <list> a is also in <list> b
+    '''
+    return reduce(lambda x, y: x or y, [i in a for i in b])
+
+
 class RPGFlask(Flask):
     ''' RPGFlask:
     This is just an expansion on the Flask app class to add fancier decorators
@@ -130,10 +137,10 @@ def require_permissions(*roles):
                 logger.warn("Attempting to access without being logged in.")
                 abort(httplib.UNAUTHORIZED)
             elif len(roles) and 'role' not in session \
-                    and session['role'] not in roles:
+                    and intersect(session['role'], roles):
                 logger.warn("Attempting to access without sufficient " +
-                            "permissions.  Has: {} Needs: {}".format(
-                            session['role'], roles))
+                            "permissions.  Has: {} Needs: {}",
+                            session['role'], roles)
                 abort(httplib.UNAUTHORIZED)
             return func(*args, **kwargs)
         return decorated_function
