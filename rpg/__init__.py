@@ -4,7 +4,7 @@ import hashlib
 from importlib import import_module
 
 __version__ = "0.1"
-__all__ = ["users", "api", "html"]
+__all__ = ["users", "players", "api", "html"]
 
 
 def cleanup():

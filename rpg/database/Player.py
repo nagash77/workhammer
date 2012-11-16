@@ -22,6 +22,7 @@ def __simple(packet):
     return {
         "name": packet["name"],
         "id": str(packet["_id"]),
+        "age": str(datetime.utcnow() - packet["created"]),
         "url": url_for('get_player', player_id=str(packet["_id"]))
     }
 
@@ -44,7 +45,10 @@ def create(info, user_id):
         'modified_by': None
     })
 
-    return info, database.insert(info)
+    id = database.insert(info)
+    info['_id'] = id
+
+    return __simple(info), str(id)
 
 
 def get(info):
