@@ -72,7 +72,7 @@ def datatype(template=None):
         "application/json": lambda d: json.dumps(d, **JSON_KWARGS)
     }
     if type(template) is str:
-        mimetypes["application/html"] = lambda d: \
+        mimetypes["text/html"] = lambda d: \
             render_template(template, **d)
     default = 'application/json'
 
