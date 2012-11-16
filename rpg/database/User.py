@@ -64,12 +64,22 @@ def modify(info, user_id):
     ''' User.modify
     Takes a user packet and the current user's ID and updates the user packet
     in the database, the user's ID is used to note who modified the user.
+    The current packet is retrieved from the database and updated with the
+    passed in information and modification information, then saved.
     '''
-    info.update({
+    if 'id' not in info:
+        raise errors.NonMongoDocumentError("User document lacks an index.")
+
+    info['_id'] = ObjectId(info['id'])
+    del info['id']
+
+    user = database.find_one(info['_id'])
+    user.update(info)
+    user.update({
         'modified': datetime.utcnow(),
         'modified_by': ObjectId(user_id)
     })
-    return database.save(info)
+    return database.save(user)
 
 
 def login(username, pwhash):

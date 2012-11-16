@@ -1,4 +1,5 @@
 from bson.objectid import ObjectId
+from datetime import datetime
 import rpg.database
 from rpg.database import errors
 database = rpg.database.collection("players")
@@ -13,7 +14,7 @@ def has_keys(src, keys):
     return reduce(lambda a, b: a and b, map(lambda k: k in src, keys))
 
 
-def create(info):
+def create(info, user_id):
     ''' Player::create
     Used to create the player entry and store it in the database, the document
     passed in must include a specified set of keys (specified by `player_keys`,
@@ -23,6 +24,13 @@ def create(info):
     if not has_keys(info, player_keys):
         raise errors.MissingInfoError(
             "Missing properties when creating a player.")
+
+    info.update({
+        'created': datetime.utcnow(),
+        'created_by': ObjectId(user_id),
+        'modified': None,
+        'modified_by': None
+    })
 
     return info, database.insert(info)
 
@@ -44,14 +52,24 @@ def get(info):
     return player
 
 
-def modify(info):
+def modify(info, user_id):
     ''' Player::modify
     Used on an existing player entry to modify/update the database document,
     used to save changes to the information for a player, such as name, exp,
     class, etc.
     '''
-    if '_id' not in info:
+    if 'id' not in info:
         raise errors.NonMongoDocumentError(
             "Trying to modify a Player that is not in the database, use " +
             "Player::create instead.")
-    return database.save(info)
+
+    info['_id'] = ObjectId(info['id'])
+    del info['id']
+
+    player = database.find_one(info['_id'])
+    player.update(info)
+    player.update({
+        'modified': datetime.utcnow(),
+        'modified_by': ObjectId(user_id)
+    })
+    return database.save(player)
