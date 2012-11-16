@@ -4,7 +4,9 @@ wide decorators for routes to help with common tasks and scenarios for dealing
 with the web requests.
 '''
 import json
+import datetime
 from functools import wraps
+from bson.objectid import ObjectId
 from flask import request, make_response, Response, session, abort, \
     render_template, Flask
 import httplib
@@ -42,6 +44,10 @@ class RPGFlask(Flask):
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
+        if isinstance(obj, ObjectId):
+            return str(ObjectId)
+        elif isinstance(obj, datetime.datetime):
+            return obj.isoformat()
         return json.JSONEncoder.default(self, obj)
 
 
