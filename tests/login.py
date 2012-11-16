@@ -18,9 +18,8 @@ class LoginTest(TestBase):
         most of the subsequent tests in this suite should fail).
         '''
         response = self.register(self.user)
-        response = self.app.get(self.endpoints["logout"]["url"],
-                headers=self.json_header)
-        self.assertHasStatus(response, httplib.ACCEPTED)
+        self.assertTrue(self.logout())
+
         response = self.app.post(self.endpoints["login"]["url"],
                 data=self.user,
                 headers=self.json_header)
@@ -58,9 +57,8 @@ class LoginTest(TestBase):
         return an error.
         '''
         response = self.register(self.user)
-        response = self.app.get(self.endpoints["logout"]["url"],
-                headers=self.json_header)
-        self.assertHasStatus(response, httplib.ACCEPTED)
+        self.assertTrue(self.logout())
+
         response = self.register({
             "username": self.user["username"],
             "password": "different one"

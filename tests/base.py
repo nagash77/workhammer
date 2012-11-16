@@ -1,5 +1,6 @@
 import unittest
 import json
+import httplib
 import rpg
 
 
@@ -25,6 +26,15 @@ class TestBase(unittest.TestCase):
         user = user if user else self.default_user
         return self.app.post(self.endpoints["register"]["url"], data=user,
                 headers=self.json_header)
+
+    def logout(self):
+        ''' TestBase::logout
+        Helper method, performs a logout on the current user, returns whether
+        the logout succeeded or not.
+        '''
+        response = self.app.get(self.endpoints["logout"]["url"],
+                headers=self.json_header)
+        return response.status_code == httplib.ACCEPTED
 
     def setUp(self):
         ''' TestBase::setUp
