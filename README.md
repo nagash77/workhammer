@@ -3,7 +3,7 @@
 Webapp backend for an idea on how to reward work.  Using an RPG like system of
 giving experience and leveling up people for their roles (or classes) based on
 accomplishments during their work.  For a better outline of the project, check out
-the (docs)[docs/intro.md].
+the [docs](docs/intro.md).
 
 ##Technical stuff
 
