@@ -46,10 +46,13 @@ def create_player():
         if not intersect(session["role"], [roles.ADMIN, roles.ROOT]):
             return "You do not have permissions to create a player for " + \
                    "another user.", httplib.UNAUTHORIZED
-        if roles.PLAYER in User.lookup(id=player_info["user"])["role"]:
+        target_user = User.lookup(id=player_info["user"])
+        if not target_user:
+            return "Targetted user does not exist", httplib.NOT_FOUND
+        elif "PLAYER" in target_user["role"]:
             return "User already has a player", httplib.CONFLICT
     elif roles.PLAYER in session["role"] and "player" in session:
-        return "User already has a player.", httplib.NOT_ACCEPTABLE
+        return "User already has a player.", httplib.CONFLICT
     else:
         player_info["user"] = session["id"]
 
@@ -57,8 +60,8 @@ def create_player():
 
     try:
         info, id = Player.create(player_info, session['id'])
-        logger.info("Player %s was created for user %s.", info["name"],
-                    session["id"])
+        logger.info("Player %s (%s) was created for user %s.", info["name"],
+                    info["id"], session["id"])
         User.modify({  # This adds the PLAYER role to the user
             "role": session["role"] + [roles.PLAYER],
             "id": player_info["user"]
@@ -89,9 +92,13 @@ def get_player(player_id):
     Using the provided <id>, returns the specified player or NOT_FOUND if the
     <id> does not match any stored player.
     '''
-    return {
-        "player": Player.get(player_id)
-    }
+    try:
+        player = Player.get(player_id)
+    except errors.NoEntryError as err:
+        logger.info(err)
+        return "No player corresponds to this url.", httplib.NOT_FOUND
+
+    return player
 
 
 @app.route("/player/<player_id>", methods=["POST"])
@@ -106,5 +113,16 @@ def modify_player(player_id):
     if not request.json:
         return httplib.BAD_REQUEST
 
+    player_info = request.json
+    player_info['id'] = player_id
+
+    try:
+        player_info = Player.modify(player_info, session['id'])
+        if not player_info:
+            return httplib.BAD_REQUEST
+    except errors.NonMongoDocumentError as err:
+        logger.info(err)
+        return "Trying to modify a non existent player", httplib.BAD_REQUEST
+
     return redirect(url_for('get_player', player_id=player_id)) \
-        if request.is_html else ({}, httplib.OK)
+        if request.is_html else (player_info, httplib.ACCEPTED)

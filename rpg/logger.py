@@ -5,7 +5,6 @@ from rpg import app
 FORMAT = '%(asctime)-11s %(ip)-15s %(url)s: %(message)s'
 
 logger = app.logger
-logging.basicConfig(format=FORMAT)
 if app.debug:
     logger.setLevel(logging.DEBUG)
     app.debug_log_format = FORMAT

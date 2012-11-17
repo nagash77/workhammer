@@ -24,16 +24,29 @@ class TestBase(unittest.TestCase):
         the TestBase::default_user packet.  Returns the response object.
         '''
         user = user if user else self.default_user
-        return self.app.post(self.endpoints["register"]["url"], data=user,
-                headers=self.json_header)
+        return self.app.post(
+            self.endpoints["register"]["url"], data=user,
+            headers=self.json_header)
+
+    def login(self, credentials=None):
+        ''' TestBase::login
+        Helper method, performs the basic login for a user using the provided
+        credentials, returns the response.  If no credentials are provided,
+        uses the TestBase::default_user set.
+        '''
+        credentials = credentials if credentials else self.default_user
+        return self.app.post(
+            self.endpoints["login"]["url"], data=credentials,
+            headers=self.json_header)
 
     def logout(self):
         ''' TestBase::logout
         Helper method, performs a logout on the current user, returns whether
         the logout succeeded or not.
         '''
-        response = self.app.get(self.endpoints["logout"]["url"],
-                headers=self.json_header)
+        response = self.app.get(
+            self.endpoints["logout"]["url"],
+            headers=self.json_header)
         return response.status_code == httplib.ACCEPTED
 
     def setUp(self):

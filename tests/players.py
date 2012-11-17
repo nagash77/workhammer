@@ -1,5 +1,4 @@
 from base import TestBase
-from unittest import skip
 import json
 import httplib
 
@@ -53,15 +52,16 @@ class PlayerTest(TestBase):
         self.assertHasStatus(response, httplib.OK)
         return json.loads(response.data)
 
-    def test_create_player(self):
-        ''' PlayerTest::test_create_player
-        Creates a player, then checks to see that the player was properly
-        created.
+    def test_create_own_player(self):
+        ''' PlayerTest::test_create_own_player
+        Creates a player for current user, then checks to see that the player
+        was properly created.
         '''
         response = self.register()
         self.assertHasStatus(response, httplib.CREATED)
 
-        self.create_player()
+        player = self.create_player()
+        self.assertIn("url", player)
 
         players = self.get_player_list()
         self.assertEqual(
@@ -69,7 +69,28 @@ class PlayerTest(TestBase):
             "The returned player list " +
             "({}) is not the expected size (1)".format(len(players)))
 
-    @skip("Modifying players not implemented yet")
+        response = self.app.get(player["url"], headers=self.json_header)
+        self.assertHasStatus(response, httplib.OK)
+        data = json.loads(response.data)
+        self.assertEqual(data["name"], player["name"])
+
+    def test_create_other_player(self):
+        ''' PlayerTest::test_create_other_player
+        Creates a player for another user, then checks that the player was
+        properly created.
+        '''
+        response = self.register()
+        self.assertHasStatus(response, httplib.CREATED)
+        id = response.data
+        self.assertTrue(self.logout(), "Logout failed.")
+
+        response = self.login(self.root_user)
+        self.assertHasStatus(response, httplib.OK)
+
+        other_player = {'user': id}
+        other_player.update(self.player)
+        self.create_player(other_player)
+
     def test_edit_player(self):
         ''' PlayerTest::test_edit_player
         Creates a player, then modifies the player.  The player's data should
@@ -95,9 +116,9 @@ class PlayerTest(TestBase):
             "Player's name was not properly changed ({} - {})".format(
                 new_name, player_new["name"]))
         self.assertEqual(
-            player_orig["id"], player_new["id"],
-            "Player ID was changed: {} -> {}".format(
-                player_orig["id"], player_new["id"]))
+            player_orig["url"], player_new["url"],
+            "Player URL was changed: {} -> {}".format(
+                player_orig["url"], player_new["url"]))
 
         players = self.get_player_list()
         self.assertEqual(

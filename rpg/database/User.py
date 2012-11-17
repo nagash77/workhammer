@@ -29,7 +29,8 @@ def __public_user(packet):
     whitelisted (key, value) pairs that should be publicly visible
     '''
     return {
-        "username": packet["username"]
+        "username": packet["username"],
+        "role": map(lambda k: roles_lookup.get(k), packet["role"])
     }
 
 
@@ -40,7 +41,7 @@ def create(info, role=[]):
     '''
     if database.find_one({"username": info["username"]}):
         raise errors.ExistingUsernameError(
-            "Username: %s already exists", info["username"])
+            "Username: {} already exists", info["username"])
 
     if type(role) is not list:
         role = [role]
@@ -99,11 +100,14 @@ def lookup(username=None, id=None):
     information.  Takes either the user's ID or username, returns None if no
     User was found, otherwise returns the public packet.
     '''
-    packet = {}
+    packet = None
     if username:
-        packet["username"] = username
+        packet = {"username": username}
     if id:
-        packet["_id"] = ObjectId(id)
+        packet = ObjectId(id)
+
+    if not packet:
+        return None
 
     user = database.find_one(packet)
     if user:

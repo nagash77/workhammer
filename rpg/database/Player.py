@@ -57,7 +57,8 @@ def get(info):
     packet.  The packet can either be the index or a dictionary of information
     to be used to filter, expects to only find one.
     '''
-    if type(info) is str:  # if the argument is a string, treat like ObjectId
+    if type(info) is unicode or type(info) is str:
+        # if the argument is a string, treat like ObjectId
         info = ObjectId(info)
 
     player = database.find_one(info)
@@ -65,7 +66,7 @@ def get(info):
         raise errors.NoEntryError(
             "Information provided to find a Player document did not find " +
             "anything.")
-    return player
+    return __simple(player)
 
 
 def all():
@@ -96,4 +97,8 @@ def modify(info, user_id):
         'modified': datetime.utcnow(),
         'modified_by': ObjectId(user_id)
     })
-    return database.save(player)
+
+    if database.save(player):
+        return __simple(player)
+    else:
+        return None

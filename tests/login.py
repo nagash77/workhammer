@@ -20,9 +20,7 @@ class LoginTest(TestBase):
         response = self.register(self.user)
         self.assertTrue(self.logout())
 
-        response = self.app.post(self.endpoints["login"]["url"],
-                data=self.user,
-                headers=self.json_header)
+        response = self.login(self.user)
         self.assertHasStatus(response, httplib.OK)
 
     def test_bad_login(self):
@@ -30,9 +28,7 @@ class LoginTest(TestBase):
         Performs a login that should fail, used to make sure the failure
         reporting and response are properly working.
         '''
-        response = self.app.post(self.endpoints["login"]["url"],
-                data=self.user,
-                headers=self.json_header)
+        response = self.login(self.user)
         self.assertHasStatus(response, httplib.BAD_REQUEST)
 
     @skip("Reset password functionality will be added later")
