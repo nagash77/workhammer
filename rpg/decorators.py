@@ -141,13 +141,14 @@ def require_permissions(*roles):
         @wraps(func)
         def decorated_function(*args, **kwargs):
             if 'id' not in session:
-                logger.warn("Attempting to access without being logged in.")
+                logger.warning("Attempting to access without being logged in.")
                 abort(httplib.UNAUTHORIZED)
             elif len(roles) and 'role' not in session \
                     and intersect(session['role'], roles):
-                logger.warn("Attempting to access without sufficient " +
-                            "permissions.  Has: {} Needs: {}",
-                            session['role'], roles)
+                logger.warning(
+                    "Attempting to access without sufficient " +
+                    "permissions.  Has: {} Needs: {}",
+                    session['role'], roles)
                 abort(httplib.UNAUTHORIZED)
             return func(*args, **kwargs)
         return decorated_function
