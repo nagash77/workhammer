@@ -125,3 +125,18 @@ class PlayerTest(TestBase):
             1, len(players),
             "The returned player list " +
             "({}) is not the expected size (1)".format(len(players)))
+
+    def test_create_second_player(self):
+        ''' PlayerTest::test_create_second_player
+        Tries to create a player for a user that already has one, should fail
+        with a warning of this condition.
+        '''
+        response = self.register()
+        self.assertHasStatus(response, httplib.CREATED)
+        self.create_player()
+
+        response = self.app.post(self.endpoints["players"]["url"],
+                                 data=json.dumps(self.player),
+                                 content_type="application/json",
+                                 headers=self.json_header)
+        self.assertHasStatus(response, httplib.CONFLICT)

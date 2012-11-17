@@ -16,11 +16,15 @@ def __private_user(packet):
     Helper function, takes the raw mongo user document and returns only the
     whitelisted (key, value) pairs that the user should see
     '''
-    return {
+    private_packet = {
         "username": packet["username"],
         "id": str(packet["_id"]),
         "role": map(lambda k: roles_lookup.get(k), packet["role"])
     }
+    if "player" in packet:
+        private_packet["player"] = str(packet["player"])
+
+    return private_packet
 
 
 def __public_user(packet):
@@ -28,13 +32,17 @@ def __public_user(packet):
     Helper function, takes the raw mongo user document and returns only the
     whitelisted (key, value) pairs that should be publicly visible
     '''
-    return {
+    public_packet = {
         "username": packet["username"],
         "role": map(lambda k: roles_lookup.get(k), packet["role"])
     }
+    if "player" in packet:
+        public_packet["player"] = str(packet["player"])
+
+    return public_packet
 
 
-def create(info, role=[]):
+def create(info, user_role=None):
     ''' User.create
     Tries to create an entry in the users table with the provided credentials,
     returns the user ID.
@@ -43,14 +51,17 @@ def create(info, role=[]):
         raise errors.ExistingUsernameError(
             "Username: {} already exists", info["username"])
 
-    if type(role) is not list:
-        role = [role]
+    if user_role is None:
+        user_role = []
+
+    if type(user_role) is not list:
+        user_role = [user_role]
 
     if database.count() == 0:
-        role.append(roles.ROOT)
+        user_role.append(roles.ROOT)
 
     info.update({
-        'role': role,
+        'role': user_role,
         'created': datetime.utcnow(),
         'modified': None,
         'modified_by': None
@@ -58,7 +69,7 @@ def create(info, role=[]):
 
     id = database.insert(info)
 
-    return id, role
+    return id, user_role
 
 
 def modify(info, user_id):

@@ -50,6 +50,8 @@ def login():
     if id:
         session['id'] = str(id)
         session['role'] = roles
+        if 'player' in user:
+            session['player'] = user['player']
         logger.info("User %s (%s) logged in.", username, id)
         return redirect(url_for('index')) if request.is_html else \
             (user, httplib.OK)

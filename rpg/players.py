@@ -4,6 +4,7 @@ of the player constructs.  The player constructs are the identifying structures
 through the web app (versus users which is the authentication construct).
 '''
 from flask import request, redirect, url_for, session
+from bson.objectid import ObjectId
 from rpg import app, roles, logger
 from rpg.database import Player, errors, User
 from rpg.decorators import datatype, require_permissions, intersect
@@ -62,9 +63,14 @@ def create_player():
         info, id = Player.create(player_info, session['id'])
         logger.info("Player %s (%s) was created for user %s.", info["name"],
                     info["id"], session["id"])
+        if player_info["user"] == session["id"]:  # update session
+            session["player"] = id
+            session["role"] = session["role"] + [roles.PLAYER]
+
         User.modify({  # This adds the PLAYER role to the user
             "role": session["role"] + [roles.PLAYER],
-            "id": player_info["user"]
+            "id": player_info["user"],
+            "player": ObjectId(id)
         }, session["id"])
     except errors.MissingInfoError as err:
         logger.info(err)
