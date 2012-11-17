@@ -1,8 +1,8 @@
-DEBUG = True
-SECRET_KEY = "onpeakrpggamebitches"
+DEBUG = True # change to False for a Prod environment or you don't want the debug helpers
+SECRET_KEY = "ChangeMeIShouldBeASecret" # change, should be unique to your instance
 MONGO_HOST = {
-    "host": "localhost",
-    "port": 27017
+    "host": "localhost", # Address of the machine hosting the service
+    "port": 27017 # Port service is listening on (default: 27017)
 }
 DEFAULT_SESSION = {
 }
