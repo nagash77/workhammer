@@ -22,3 +22,10 @@ def cleanup():
 
 def collection(name):
     return database[name]
+
+
+def has_keys(src, keys):
+    ''' has_keys
+    Checks that the <dict> src has all of the keys in keys
+    '''
+    return reduce(lambda a, b: a and b, map(lambda k: k in src, keys))

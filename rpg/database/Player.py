@@ -1,18 +1,11 @@
 from bson.objectid import ObjectId
 from flask import url_for
 from datetime import datetime
-from . import collection
+from . import collection, has_keys
 from . import errors
 database = collection("players")
 
 player_keys = ["name"]
-
-
-def has_keys(src, keys):
-    ''' has_keys
-    Checks that the <dict> src has all of the keys in keys
-    '''
-    return reduce(lambda a, b: a and b, map(lambda k: k in src, keys))
 
 
 def __simple(packet):
@@ -32,7 +25,7 @@ def create(info, user_id):
     Used to create the player entry and store it in the database, the document
     passed in must include a specified set of keys (specified by `player_keys`,
     this is just a basic way of ensuring some consistency in a model.  Returns
-    the player info and the id of the entry (or None if it failed)
+    the player info and the id of the entry.
     '''
     if not has_keys(info, player_keys):
         raise errors.MissingInfoError(
