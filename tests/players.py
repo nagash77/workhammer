@@ -52,6 +52,15 @@ class PlayerTest(TestBase):
         self.assertHasStatus(response, httplib.OK)
         return json.loads(response.data)
 
+    def test_empty_list(self):
+        ''' PlayerTest::test_empty_list
+        Grabs the player list (which should be initially empty) and makes sure
+        it returns an empty array.
+        '''
+        players = self.get_player_list()
+        print players
+        self.assertEmpty(players, "Returned player list was not empty.")
+
     def test_create_own_player(self):
         ''' PlayerTest::test_create_own_player
         Creates a player for current user, then checks to see that the player
