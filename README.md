@@ -35,7 +35,7 @@ python serve.py
 ## Settings
 
 The app settings live in the rpg/settings.py.  I have included a
-(template)[rpg.settings.py_template].  The file holds various settings for how the
+[template](rpg/settings.py_template).  The file holds various settings for how the
 application should behave, more settings will be added as functionality and
 features get added (like when I get around to making the logging at a production
 level capacity).  The current settings are:
