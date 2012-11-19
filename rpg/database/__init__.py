@@ -9,14 +9,14 @@ connection_info = {
 connection_info.update(settings.MONGO_HOST)
 connection = mongo.Connection(**connection_info)
 if settings.DEBUG:
-    database = connection.test
+    database = connection.rpg_dev
 else:
     database = connection.rpg
 
 
 def cleanup():
     if settings.DEBUG:
-        connection.drop_database("test")
+        connection.drop_database("rpg_dev")
 
 
 def collection(name):
