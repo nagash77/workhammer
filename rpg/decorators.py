@@ -94,7 +94,8 @@ def datatype(template=None):
 
             if type(data) is int:  # if int, treat it like a status code
                 response = make_response("", data)
-            elif type(data) is dict:  # if it is a dict, treat like data packet
+            elif type(data) is dict or type(data) is list:
+                # if it is a dict or list, treat like data packet
                 callback = request.args.get('callback', False)
                 if callback:  # if has a callback parameter, treat like JSONP
                     data = str(callback) + "(" + \

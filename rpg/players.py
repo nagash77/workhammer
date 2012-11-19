@@ -86,9 +86,7 @@ def players():
     ''' players -> GET /player
     Returns an array of the players
     '''
-    return {
-        "players": Player.all()
-    }
+    return Player.all()
 
 
 @app.route("/player/<player_id>", methods=["GET"])
