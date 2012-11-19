@@ -4,8 +4,8 @@ loaded, most of these are static endpoints that are basically a minimal
 fallback from dynamically creating the markup for the pages.  This can
 probably be left out of any advanced application or API usage.
 '''
-from rpg import app
-from rpg.decorators import datatype
+from . import app
+from .decorators import datatype
 
 
 @app.route('/register', methods=['GET'])

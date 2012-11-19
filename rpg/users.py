@@ -3,9 +3,9 @@ This is the collection of functions that handle the interaction with the app
 users.  Mainly handling registering, logging in/out, account changes, etc.
 '''
 from flask import request, redirect, url_for, session
-from rpg import app, password_hash, logger
-from rpg.database import User, errors, Sessions
-from rpg.decorators import datatype
+from . import app, password_hash, logger
+from .database import User, errors, Sessions
+from .decorators import datatype
 import httplib
 
 

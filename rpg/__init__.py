@@ -25,14 +25,14 @@ def password_hash(password):
     return pwhash.hexdigest()
 
 # Webapp initialization
-import rpg.session
-from rpg.decorators import RPGFlask
+import session
+from .decorators import RPGFlask
 
 # RPGFlask is in decorators and is just an extended version of flask.Flask
 app = RPGFlask(__name__)
-app.session_interface = rpg.session.SessionHandler()
+app.session_interface = session.SessionHandler()
 app.jinja_env.line_statement_prefix = '%'
 app.debug = settings.DEBUG
 app.__version__ = __version__
 # This just imports all of the webapps modules (defined in __all__)
-map(lambda module: import_module("rpg." + module), __all__)
+map(lambda module: import_module("." + module, __name__), __all__)

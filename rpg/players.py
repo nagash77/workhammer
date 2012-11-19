@@ -5,9 +5,9 @@ through the web app (versus users which is the authentication construct).
 '''
 from flask import request, redirect, url_for, session
 from bson.objectid import ObjectId
-from rpg import app, roles, logger
-from rpg.database import Player, errors, User
-from rpg.decorators import datatype, require_permissions, intersect
+from . import app, roles, logger
+from .database import Player, errors, User
+from .decorators import datatype, require_permissions, intersect
 import httplib
 # Keys that the user cannot directly change (controlled by app)
 reserved_keys = ["experience"]

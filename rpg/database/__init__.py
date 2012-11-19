@@ -1,5 +1,6 @@
 import pymongo as mongo
-import rpg.settings as settings
+#import rpg.settings as settings
+from .. import settings
 
 
 connection_info = {

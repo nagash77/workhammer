@@ -1,9 +1,9 @@
 from bson.objectid import ObjectId
 from flask import url_for
 from datetime import datetime
-import rpg.database
-from rpg.database import errors
-database = rpg.database.collection("players")
+from . import collection
+from . import errors
+database = collection("players")
 
 player_keys = ["name"]
 

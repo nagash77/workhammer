@@ -5,7 +5,7 @@ setting up the logging handler(s) and format.  (Work still to do)
 '''
 import logging
 from flask import request
-from rpg import app
+from . import app
 
 FORMAT = '%(asctime)-11s %(ip)-15s %(url)s: %(message)s'
 

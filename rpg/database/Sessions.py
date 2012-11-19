@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
-import rpg.database
-database = rpg.database.collection("sessions")
+from . import collection
+database = collection("sessions")
 
 
 def get(session_id):

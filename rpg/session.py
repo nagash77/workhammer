@@ -1,6 +1,6 @@
 from flask.sessions import SessionInterface, SessionMixin
-from rpg import settings
-from rpg.database import Sessions
+from . import settings
+from .database import Sessions
 
 SESSION_KEY = settings.SECRET_KEY
 

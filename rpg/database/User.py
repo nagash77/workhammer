@@ -1,9 +1,9 @@
 from bson.objectid import ObjectId
 from datetime import datetime
-import rpg.database
-from rpg.database import errors
-from rpg import roles
-database = rpg.database.collection("users")
+from . import collection
+from . import errors
+from .. import roles
+database = collection("users")
 
 roles_lookup = dict(
     map(lambda r: (getattr(roles, r), r),
