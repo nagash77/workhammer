@@ -32,15 +32,16 @@ class PlayerTest(TestBase):
         Helper method, creates a player entry with the provided information.
         If no information provided, uses the self.player as default.
         '''
+        player = player if player else self.player
         response = self.app.post(self.endpoints["players"]["url"],
-                                 data=json.dumps(self.player),
+                                 data=json.dumps(player),
                                  content_type="application/json",
                                  headers=self.json_header)
         self.assertHasStatus(response, httplib.CREATED)
-        player = json.loads(response.data)
-        self.assertEqual(self.player["name"], player["name"],
+        new_player = json.loads(response.data)
+        self.assertEqual(player["name"], new_player["name"],
                          "Returned player's name is not the defined name.")
-        return player
+        return new_player
 
     def get_player_list(self):
         ''' PlayerTest::get_player_list
@@ -53,16 +54,15 @@ class PlayerTest(TestBase):
         return json.loads(response.data)
 
     def test_empty_list(self):
-        ''' PlayerTest::test_empty_list
+        ''' Test empty player list
         Grabs the player list (which should be initially empty) and makes sure
         it returns an empty array.
         '''
         players = self.get_player_list()
-        print players
         self.assertEmpty(players, "Returned player list was not empty.")
 
     def test_create_own_player(self):
-        ''' PlayerTest::test_create_own_player
+        ''' Test a user creating their own player
         Creates a player for current user, then checks to see that the player
         was properly created.
         '''
@@ -84,7 +84,7 @@ class PlayerTest(TestBase):
         self.assertEqual(data["name"], player["name"])
 
     def test_create_other_player(self):
-        ''' PlayerTest::test_create_other_player
+        ''' Test a DM creating a player for another user
         Creates a player for another user, then checks that the player was
         properly created.
         '''
@@ -99,9 +99,10 @@ class PlayerTest(TestBase):
         other_player = {'user': id}
         other_player.update(self.player)
         self.create_player(other_player)
+        self.create_player(self.player)
 
     def test_edit_player(self):
-        ''' PlayerTest::test_edit_player
+        ''' Test a user editting their player
         Creates a player, then modifies the player.  The player's data should
         be changed and not create a new clone.
         '''
@@ -136,7 +137,7 @@ class PlayerTest(TestBase):
             "({}) is not the expected size (1)".format(len(players)))
 
     def test_create_second_player(self):
-        ''' PlayerTest::test_create_second_player
+        ''' Test a player trying to create a second player
         Tries to create a player for a user that already has one, should fail
         with a warning of this condition.
         '''

@@ -13,7 +13,7 @@ class LoginTest(TestBase):
     }
 
     def test_good_login(self):
-        ''' LoginTest::test_good_login
+        ''' Test performing a good login
         Performs a login that should be successful, base test (if this fails,
         most of the subsequent tests in this suite should fail).
         '''
@@ -24,7 +24,7 @@ class LoginTest(TestBase):
         self.assertHasStatus(response, httplib.OK)
 
     def test_bad_login(self):
-        ''' LoginTest::test_bad_login
+        ''' Test performing a bad login
         Performs a login that should fail, used to make sure the failure
         reporting and response are properly working.
         '''
@@ -33,14 +33,14 @@ class LoginTest(TestBase):
 
     @skip("Reset password functionality will be added later")
     def test_reset_password(self):
-        ''' LoginTest::test_reset_password
+        ''' Test resetting a password
         Requests a password reset, this should then kick off the process to
         recover an account with a forgotten password.
         '''
         pass
 
     def test_register(self):
-        ''' LoginTest::test_register
+        ''' Test registering a username
         Registers a new user, should go through the full process to create the
         user and then make sure the user has logged in.
         '''
@@ -48,7 +48,7 @@ class LoginTest(TestBase):
         self.assertHasStatus(response, httplib.CREATED)
 
     def test_username_conflict(self):
-        ''' LoginTest::test_username_conflict
+        ''' Test registering with an existing username
         Registers a new user, then tries to register the user again, should
         return an error.
         '''
