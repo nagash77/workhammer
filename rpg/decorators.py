@@ -29,7 +29,7 @@ class RPGFlask(Flask):
         return Flask.__init__(self, *args, **kwargs)
 
     def endpoint(self, *args, **kwargs):
-        ''' endpoing decorator:
+        ''' endpoint decorator:
         Like the route decorator, does the same thing except labels the route
         as an endpoint, meaning the route is a specific entry point into the
         application, other routes are given dynamically.
@@ -43,10 +43,16 @@ class RPGFlask(Flask):
 
 
 class JSONEncoder(json.JSONEncoder):
+    ''' JSONEncoder
+    An extended json.JSONEncoder, used to customize the encoding of the data
+    packets (dicts or lists) into JSON, just catches various types and beyond
+    the basic types and handles their JSON representation (examples are things
+    like python's datetime or the bson.objectid used for indexing in mongo).
+    '''
     def default(self, obj):
-        if isinstance(obj, ObjectId):
+        if isinstance(obj, ObjectId):  # ObjectId used in mongo
             return str(ObjectId)
-        elif isinstance(obj, datetime.datetime):
+        elif isinstance(obj, datetime.datetime):  # datetime used for dates
             return obj.isoformat()
         return json.JSONEncoder.default(self, obj)
 

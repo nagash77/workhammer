@@ -9,7 +9,7 @@ from rpg import app, roles, logger
 from rpg.database import Player, errors, User
 from rpg.decorators import datatype, require_permissions, intersect
 import httplib
-
+# Keys that the user cannot directly change (controlled by app)
 reserved_keys = ["experience"]
 
 
@@ -30,7 +30,7 @@ def filter_keys(src, blacklist):
 @require_permissions
 def create_player():
     ''' create_player -> POST /player
-        POST: user=[id] + <JSON BODY>
+        POST: <JSON DATA>
     Submits a set of player information to use in creating a player, this can
     be creating a player for another user or for the current user if:
         * the current user is ADMIN or ROOT, can create for another user

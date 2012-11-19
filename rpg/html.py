@@ -11,10 +11,12 @@ from rpg.decorators import datatype
 @app.route('/register', methods=['GET'])
 @datatype("register.html")
 def register_page():
+    ''' Creates the registration HTML page '''
     return {}
 
 
 @app.route('/login', methods=['GET'])
 @datatype("login.html")
 def login_page():
+    ''' Creates the login HTML page '''
     return {}

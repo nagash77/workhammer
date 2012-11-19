@@ -1,3 +1,8 @@
+''' logger.py
+This is an importable module that wraps the logging functionality for the app,
+it takes care of adding additional information to the log message and handles
+setting up the logging handler(s) and format.  (Work still to do)
+'''
 import logging
 from flask import request
 from rpg import app
