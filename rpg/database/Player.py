@@ -20,6 +20,13 @@ def __simple(packet):
     }
 
 
+def __complex(packet):
+    ''' __complex
+    Returns a more complex version of the Player document (versus __simple)
+    '''
+    return __simple(packet)
+
+
 def create(info, user_id):
     ''' Player::create
     Used to create the player entry and store it in the database, the document
@@ -41,7 +48,7 @@ def create(info, user_id):
     id = database.insert(info)
     info['_id'] = id
 
-    return __simple(info), str(id)
+    return __complex(info), str(id)
 
 
 def get(info):
@@ -59,7 +66,7 @@ def get(info):
         raise errors.NoEntryError(
             "Information provided to find a Player document did not find " +
             "anything.")
-    return __simple(player)
+    return __complex(player)
 
 
 def all():
@@ -92,6 +99,6 @@ def modify(info, user_id):
     })
 
     if database.save(player):
-        return __simple(player)
+        return __complex(player)
     else:
         return None
