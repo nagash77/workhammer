@@ -1,11 +1,11 @@
-#Work RPG (tentative title)
+# Workhammer 401k
 
 Webapp backend for an idea on how to reward work.  Using an RPG like system of
 giving experience and leveling up people for their roles (or classes) based on
 accomplishments during their work.  For a better outline of the project, check out
 the [docs](docs/intro.md).
 
-##Technical stuff
+## Technical stuff
 
 The app is written using Python 2.7 with Flask for the web framework and MongoDB as
 the database backend.  It will provide an adaptive RESTful API along with a simple
@@ -13,7 +13,7 @@ backend generated HTML interface (to start).  It is written to use virtualenv.  
 will be done with good test coverage and against the flake8 (pyflakes + PEP8)
 linting utility.
 
-##Setup
+## Setup
 
 For setup, if you have virtualenvwrapper and make installed you can just run:
 ```

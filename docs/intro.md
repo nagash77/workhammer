@@ -1,4 +1,4 @@
-# ITRPG
+# Workhammer 401k
 
 So the idea for this application came from my boss (@nagash77).  He proposed having
 an RPG like system for IT employees, where they would gain experience for doing
