@@ -30,8 +30,6 @@ def __complex(packet):
         "age": str(datetime.utcnow() - packet["created"]),
         "url": url_for('get_player', player_id=str(packet["_id"])),
         "experience": packet["experience"],
-        "quest_url": url_for('get_player', player_id=str(packet["_id"])) +
-        "/completed"
     }
 
 
