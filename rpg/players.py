@@ -5,24 +5,13 @@ through the web app (versus users which is the authentication construct).
 '''
 from flask import request, redirect, url_for, session
 from bson.objectid import ObjectId
-from . import app, roles, logger
+from . import app, filter_keys
+from . import roles, logger
 from .database import Player, errors, User
 from .decorators import datatype, require_permissions, intersect
 import httplib
 # Keys that the user cannot directly change (controlled by app)
 reserved_keys = ["experience"]
-
-
-def filter_keys(src, blacklist):
-    ''' filter_keys
-    Helper function, removes the (key, value) pairs for keys in the blacklist
-    list, returns filtered dictionary.
-    '''
-    for key in blacklist:
-        if key in src:
-            del src[key]
-
-    return src
 
 
 @app.route("/player", methods=["POST"])
@@ -38,7 +27,7 @@ def create_player():
           creates for the current user
     '''
     if not request.json:
-        return "POST body must be a JSON document for the player to be " +\
+        return "POST body must be a JSON document for the player to be " + \
             "made.", \
             httplib.BAD_REQUEST
 
@@ -105,13 +94,13 @@ def get_player(player_id):
     return player
 
 
-@app.route("/player/<player_id>", methods=["POST"])
+@app.route("/player/<player_id>", methods=["PUT"])
 @datatype
 @require_permissions
 def modify_player(player_id):
-    ''' modify_player -> POST /player/<id>
-        POST: <JSON DATA>
-    Uses the POSTed JSON data to update the player specified by <id>, will
+    ''' modify_player -> PUT /player/<id>
+        PUT: <JSON DATA>
+    Uses the PUTed JSON data to update the player specified by <id>, will
     throw a NOT_FOUND if the <id> does not match any stored player.
     '''
     if not request.json:

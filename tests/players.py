@@ -27,22 +27,6 @@ class PlayerTest(TestBase):
         self.register(self.root_user)
         self.logout()
 
-    def create_player(self, player=None):
-        ''' PlayerTest::create_player
-        Helper method, creates a player entry with the provided information.
-        If no information provided, uses the self.player as default.
-        '''
-        player = player if player else self.player
-        response = self.app.post(self.endpoints["players"]["url"],
-                                 data=json.dumps(player),
-                                 content_type="application/json",
-                                 headers=self.json_header)
-        self.assertHasStatus(response, httplib.CREATED)
-        new_player = json.loads(response.data)
-        self.assertEqual(player["name"], new_player["name"],
-                         "Returned player's name is not the defined name.")
-        return new_player
-
     def get_player_list(self):
         ''' PlayerTest::get_player_list
         Helper method, retrieves the list of players.  Checks the request was
@@ -69,7 +53,7 @@ class PlayerTest(TestBase):
         response = self.register()
         self.assertHasStatus(response, httplib.CREATED)
 
-        player = self.create_player()
+        player = self.create_player(self.player)
         self.assertIn("url", player)
 
         players = self.get_player_list()
@@ -113,7 +97,7 @@ class PlayerTest(TestBase):
         })
 
         new_name = "Chuck"
-        response = self.app.post(
+        response = self.app.put(
             player_orig["url"],
             data=json.dumps({"name": new_name}),
             content_type="application/json",
@@ -143,7 +127,7 @@ class PlayerTest(TestBase):
         '''
         response = self.register()
         self.assertHasStatus(response, httplib.CREATED)
-        self.create_player()
+        self.create_player(self.player)
 
         response = self.app.post(self.endpoints["players"]["url"],
                                  data=json.dumps(self.player),

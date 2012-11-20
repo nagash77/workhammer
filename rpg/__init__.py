@@ -4,7 +4,8 @@ import hashlib
 from importlib import import_module
 
 __version__ = "0.1"
-__all__ = ["users", "players", "api", "html"]  # List of the modules to import
+# List of the modules to import
+__all__ = ["users", "players", "api", "html"]
 
 
 def cleanup():
@@ -23,6 +24,18 @@ def password_hash(password):
     pwhash = hashlib.sha224(password)
     pwhash.update(settings.SECRET_KEY)
     return pwhash.hexdigest()
+
+
+def filter_keys(src, blacklist):
+    ''' filter_keys
+    Helper function, removes the (key, value) pairs for keys in the blacklist
+    list, returns filtered dictionary.
+    '''
+    for key in blacklist:
+        if key in src:
+            del src[key]
+
+    return src
 
 # Webapp initialization
 import session

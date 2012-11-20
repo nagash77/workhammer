@@ -16,6 +16,9 @@ class TestBase(unittest.TestCase):
         "username": "TestUser",
         "password": "just a test password"
     }
+    default_player = {
+        "name": "TestPlayer"
+    }
 
     def register(self, user=None):
         ''' TestBase::register
@@ -48,6 +51,22 @@ class TestBase(unittest.TestCase):
             self.endpoints["logout"]["url"],
             headers=self.json_header)
         return response.status_code == httplib.ACCEPTED
+
+    def create_player(self, player=None):
+        ''' TestBase::create_player
+        Helper method, creates a player entry with the provided information.
+        If no information provided, uses the self.player as default.
+        '''
+        player = player if player else self.default_player
+        response = self.app.post(self.endpoints["players"]["url"],
+                                 data=json.dumps(player),
+                                 content_type="application/json",
+                                 headers=self.json_header)
+        self.assertHasStatus(response, httplib.CREATED)
+        new_player = json.loads(response.data)
+        self.assertEqual(player["name"], new_player["name"],
+                         "Returned player's name is not the defined name.")
+        return new_player
 
     def setUp(self):
         ''' TestBase::setUp
@@ -86,11 +105,11 @@ class TestBase(unittest.TestCase):
         '''
         if isinstance(status, list):
             if not msg:
-                msg = "Response returned {} (expeded one of: {})".format(
-                    response.status_code, str(status))
+                msg = "Response returned {} (expeded one of: {}) - {}".format(
+                    response.status_code, str(status), response.data)
             self.assertIn(response.status_code, status, msg)
         else:
             if not msg:
-                msg = "Response returned {} (expected: {})".format(
-                    response.status_code, status)
+                msg = "Response returned {} (expected: {}) - {}".format(
+                    response.status_code, status, response.data)
             self.assertEqual(response.status_code, status, msg)
