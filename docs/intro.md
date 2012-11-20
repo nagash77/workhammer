@@ -9,6 +9,8 @@ functionality.
 ## Table of Contents
 1. [Login](login.md)
 1. [Players](players.md)
+1. [Quests](quests.md)
+1. [Usage](usage.md)
 
 ## Terminology
 * **Player**: The 'game' unit, this is the alter ego that plays the game, their are
