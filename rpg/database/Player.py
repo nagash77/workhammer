@@ -24,7 +24,15 @@ def __complex(packet):
     ''' __complex
     Returns a more complex version of the Player document (versus __simple)
     '''
-    return __simple(packet)
+    return {
+        "name": packet["name"],
+        "id": str(packet["_id"]),
+        "age": str(datetime.utcnow() - packet["created"]),
+        "url": url_for('get_player', player_id=str(packet["_id"])),
+        "experience": packet["experience"],
+        "quest_url": url_for('get_player', player_id=str(packet["_id"])) +
+        "/completed"
+    }
 
 
 def create(info, user_id):
@@ -39,6 +47,8 @@ def create(info, user_id):
             "Missing properties when creating a player.")
 
     info.update({
+        'experience': 0,
+
         'created': datetime.utcnow(),
         'created_by': ObjectId(user_id),
         'modified': None,
