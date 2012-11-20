@@ -98,7 +98,4 @@ def modify(info, user_id):
         'modified_by': ObjectId(user_id)
     })
 
-    if database.save(player):
-        return __complex(player)
-    else:
-        return None
+    return __complex(player) if database.save(player) else None
