@@ -28,5 +28,9 @@ lint:
 
 test: lint unittest
 
+clean:
+	rm rpg/*.pyc
+	rm rpg/database/*.pyc
+
 serve:
 	python serve.py
