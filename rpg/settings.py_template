@@ -3,15 +3,15 @@ This is where all of the instance specific settings are controlled, you just
 modify these values for your own needs.  Additional instance specific settings
 can be added here.
 '''
-DEBUG = True # change to False for a Prod environment, enables debug handlers
-SECRET_KEY = "ChangeMeIShouldBeASecret" # should be unique to your instance
+DEBUG = True  # change to False for a Prod environment, enables debug handlers
+SECRET_KEY = "ChangeMeIShouldBeASecret"  # should be unique to your instance
 MONGO_HOST = {
-    "host": "localhost", # Address of the machine hosting the service
-    "port": 27017 # Port service is listening on (default: 27017)
+    "host": "localhost",  # Address of the machine hosting the service
+    "port": 27017  # Port service is listening on (default: 27017)
 }
 DEFAULT_SESSION = {
 }
-STATIC = { # settings for serving static files in debug mode
-   "folder": "../lib", # serves the /lib folder in debug mode
-   "path": "/s" # static files are served under /s, so rpg.js is found at /s/rpg.js
+STATIC = {  # settings for serving static files in debug mode
+   "folder": "../lib",  # serves the /lib folder in debug mode
+   "path": "/s"  # static files are served under /s, so rpg.js is found at /s/rpg.js
 }
