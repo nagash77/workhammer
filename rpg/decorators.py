@@ -10,6 +10,7 @@ from bson.objectid import ObjectId
 from flask import request, make_response, Response, session, abort, \
     render_template, Flask
 from . import settings
+from .database import User
 import httplib
 
 
@@ -18,6 +19,16 @@ def intersect(a, b):
     Returns a boolean if an item in <list> a is also in <list> b
     '''
     return reduce(lambda x, y: x or y, [i in a for i in b])
+
+
+def html_base():
+    ''' html_base
+    Generates a general base set of information for the HTML page rendering.
+    '''
+    return {
+        "logged_id": 'id' in session,
+        "user": User.get(session['id']) if 'id' in session else None
+    }
 
 
 class RPGFlask(Flask):
@@ -91,7 +102,7 @@ def datatype(template=None):
     }
     if type(template) is str:
         mimetypes["text/html"] = lambda d: \
-            render_template(template, **d)
+            render_template(template, **dict(d.items() + html_base().items()))
     default = 'application/json'
 
     def decorator(func):
