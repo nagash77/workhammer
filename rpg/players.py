@@ -7,7 +7,7 @@ from flask import request, redirect, url_for, session
 from bson.objectid import ObjectId
 from . import app, filter_keys
 from . import roles, logger
-from .database import Player, errors, User
+from .database import Player, QuestLog, errors, User
 from .decorators import datatype, require_permissions, intersect
 import httplib
 # Keys that the user cannot directly change (controlled by app)
@@ -82,11 +82,14 @@ def players():
 @datatype("player.html")
 def get_player(player_id):
     ''' get_player -> GET /player/<id>
+        GET: quests=<something>
     Using the provided <id>, returns the specified player or NOT_FOUND if the
     <id> does not match any stored player.
     '''
     try:
         player = Player.get(player_id)
+        if "quests" in request.args:
+            player["quests"] = QuestLog.get(player=player_id)
     except errors.NoEntryError as err:
         logger.info(err)
         return "No player corresponds to this url.", httplib.NOT_FOUND
