@@ -72,6 +72,24 @@ def create(info, user_role=None):
     return id, user_role
 
 
+def get(info):
+    ''' User.get
+    Retrieves a user document from the database based on the passed in
+    packet.  The packet can either be the index or a dictionary of information
+    to be used to filter, expects to only find one.
+    '''
+    if type(info) is unicode or type(info) is str:
+        # if the argument is a string, treat like ObjectId
+        info = ObjectId(info)
+
+    user = database.find_one(info)
+    if not user:
+        raise errors.NoEntryError(
+            "Information provided to find a User document did not find " +
+            "anything.")
+    return __private_user(user)
+
+
 def modify(info, user_id):
     ''' User.modify
     Takes a user packet and the current user's ID and updates the user packet
