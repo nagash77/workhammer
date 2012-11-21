@@ -1,0 +1,17 @@
+body {
+   padding: 0;
+   margin: 0;
+}
+
+.loginBar {
+   padding: 4px;
+   height: 20px;
+   background: black;
+}
+
+.loginBar .status {
+   text-align: right;
+}
+.loginBar a {
+   color: white;
+}
