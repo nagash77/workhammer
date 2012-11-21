@@ -9,6 +9,7 @@ from functools import wraps
 from bson.objectid import ObjectId
 from flask import request, make_response, Response, session, abort, \
     render_template, Flask
+from . import settings
 import httplib
 
 
@@ -26,6 +27,11 @@ class RPGFlask(Flask):
     '''
     def __init__(self, *args, **kwargs):
         self.endpoints = {}  # This is the storage property for the endpoints
+        if settings.DEBUG:
+            if 'static_folder' not in kwargs and 'folder' in settings.STATIC:
+                kwargs['static_folder'] = settings.STATIC['folder']
+            if 'static_url_path' not in kwargs and 'path' in settings.STATIC:
+                kwargs['static_url_path'] = settings.STATIC['path']
         return Flask.__init__(self, *args, **kwargs)
 
     def endpoint(self, *args, **kwargs):
