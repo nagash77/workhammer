@@ -7,8 +7,9 @@ import json
 import datetime
 from functools import wraps
 from bson.objectid import ObjectId
-from flask import request, make_response, Response, session, abort, \
-    render_template, Flask
+from flask import request, make_response, session, abort, render_template, \
+    Flask
+from werkzeug import BaseResponse
 from . import settings
 from .database import User
 import httplib
@@ -132,7 +133,7 @@ def datatype(template=None):
                         else mimetypes[default](data)
                     response = make_response(data, status_code)
                     response.mimetype = best if best else default
-            elif type(data) is Response:  # if it is a Response, already done
+            elif isinstance(data, BaseResponse):  # if it is a Response, use it
                 response = data
             else:  # otherwise, treat it like raw data
                 response = make_response(data, status_code)
