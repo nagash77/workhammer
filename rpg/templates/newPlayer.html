@@ -1,7 +1,19 @@
 % extends "base.html"
 % block head
-
-%blockend
+<script language="Javascript">
+	function submitCharacterForm() {
+		var characterFormObj = {
+			"name" : $('#name').val(),
+			"nickname" : $('#nickname').val(),
+			"gender" : $('#gender').val(),
+			"dob" : $('#dob').val(),
+			"weaponOfChoice" : $('#weaponOfChoice').val(),
+			"placeOfOrigin" : $('#placeOfOrigin').val()
+		};
+		console.log(characterFormObj);
+	}
+</script>
+%endblock
 % block body
 <h1>New Player Form</h1>
 <div>
@@ -14,6 +26,6 @@
 	<input id="dob" placeholder="Date Of Birth" />
 	<input id="weaponOfChoice" placeholder="Weapon of Choice" />
 	<input id="placeOfOrigin" placeholder="Place of Origin" />
-	<div class="submit button">Create Character</div>
+	<div class="submit button" onClick="submitCharacterForm();">Create Character</div>
 </div>
 % endblock

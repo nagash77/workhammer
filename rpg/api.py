@@ -15,6 +15,7 @@ def index():
     application, used for discovery.  (Don't hardcode any of the endpoints
     in your API usage, use this packet to discover the API tree!)
     '''
+    print app.endpoints
     return app.endpoints
 
 

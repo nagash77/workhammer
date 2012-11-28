@@ -20,3 +20,9 @@ def register_page():
 def login_page():
     ''' Creates the login HTML page '''
     return {}
+
+@app.route('/newPlayer', methods=['GET'])
+@datatype("newPlayer.html")
+def newPlayer_page():
+    ''' Creates the new player form HTML page '''
+    return {}
